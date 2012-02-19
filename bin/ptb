@@ -1,0 +1,12 @@
+#!/usr/bin/ruby
+
+if File.exists?(File.join(File.expand_path('../..', __FILE__), '.git'))
+  lib_path = File.expand_path('../../lib', __FILE__)
+  $:.unshift(lib_path)
+end
+
+require 'rubygems'
+require 'ptb'
+require 'ptb/cli'
+
+Ptb::CLI.start
