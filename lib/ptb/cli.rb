@@ -28,6 +28,16 @@ module Ptb
       end
     end
 
+    desc "message", "Generates a PivotalTracker commit message for the current branch"
+    def message
+      branch = `git symbolic-ref --short HEAD`.strip
+      if branch =~ /^[0-9]+$/
+        if story = project.stories.find(branch)
+          say "[##{ branch }] #{ story.name }\n\n\n#{ story.url }"
+        end
+      end
+    end
+
     private
 
     def choose(prompt, choices, confirm=false)
