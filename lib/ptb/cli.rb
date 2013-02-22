@@ -33,7 +33,7 @@ module Ptb
       branch = `git symbolic-ref --short HEAD`.strip
       if branch =~ /^[0-9]+$/
         if story = project.stories.find(branch)
-          say "[##{ branch }] #{ story.name }\n\n\n#{ story.url }"
+          say "[##{ branch }] #{ story.name }\n\n\n\n#{ story.url }"
         end
       end
     end
