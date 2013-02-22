@@ -28,12 +28,19 @@ module Ptb
       end
     end
 
-    desc "message", "Generates a PivotalTracker commit message for the current branch"
+    desc "message",
+      "Generates a PivotalTracker commit message for the current branch"
+    method_option :lines,
+      :aliases => '-l',
+      :type => :numeric,
+      :default => 3,
+      :desc => "Number of lines between header and footer"
     def message
       branch = `git symbolic-ref --short HEAD`.strip
       if branch =~ /^[0-9]+$/
         if story = project.stories.find(branch)
-          say "[##{ branch }] #{ story.name }\n\n\n\n#{ story.url }"
+          lines = "\n" * options[:lines]
+          say "[##{ branch }] #{ story.name }\n#{ lines }#{ story.url }"
         end
       end
     end
