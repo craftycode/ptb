@@ -15,15 +15,15 @@ module Ptb
       branches=`git branch`
 
       branches.each_line do |line|
-        branch = line[2..-2] 
-        if branch =~ /^[0-9]+$/ 
+        branch = line[2..-2]
+        if branch =~ /^[0-9]+$/
           if story = project.stories.find(branch)
-            say "#{line.rstrip} [#{story.current_state}] #{story.name} (#{story.url})" 
+            say "#{line.rstrip} [#{story.current_state}] #{story.name} (#{story.url})"
           else
             say line.rstrip
           end
-        else 
-          say line.rstrip 
+        else
+          say line.rstrip
         end
       end
     end
