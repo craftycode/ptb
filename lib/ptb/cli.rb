@@ -15,15 +15,32 @@ module Ptb
       branches=`git branch`
 
       branches.each_line do |line|
-        branch = line[2..-2] 
-        if branch =~ /^[0-9]+$/ 
+        branch = line[2..-2]
+        if branch =~ /^[0-9]+$/
           if story = project.stories.find(branch)
-            say "#{line.rstrip} [#{story.current_state}] #{story.name} (#{story.url})" 
+            say "#{line.rstrip} [#{story.current_state}] #{story.name} (#{story.url})"
           else
             say line.rstrip
           end
-        else 
-          say line.rstrip 
+        else
+          say line.rstrip
+        end
+      end
+    end
+
+    desc "message",
+      "Generates a PivotalTracker commit message for the current branch"
+    method_option :lines,
+      :aliases => '-l',
+      :type => :numeric,
+      :default => 3,
+      :desc => "Number of lines between header and footer"
+    def message
+      branch = `git symbolic-ref --short HEAD`.strip
+      if branch =~ /^[0-9]+$/
+        if story = project.stories.find(branch)
+          lines = "\n" * options[:lines]
+          say "[##{ branch }] #{ story.name }\n#{ lines }#{ story.url }"
         end
       end
     end
