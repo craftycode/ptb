@@ -30,22 +30,30 @@ module Ptb
 
     desc "message",
       "Generates a PivotalTracker commit message for the current branch"
-    method_option :lines,
-      :aliases => '-l',
-      :type => :numeric,
-      :default => 3,
-      :desc => "Number of lines between header and footer"
     def message
       branch = `git symbolic-ref --short HEAD`.strip
       if branch =~ /^[0-9]+$/
         if story = project.stories.find(branch)
-          lines = "\n" * options[:lines]
-          say "[##{ branch }] #{ story.name }\n#{ lines }#{ story.url }"
+          puts <<-EOS
+[##{branch}] 
+
+#{word_wrap(story.name, :line_width => 72)}
+#{story.url}
+          EOS
         end
       end
     end
 
     private
+
+    def word_wrap(text, *args)
+      options = args.last.is_a?(Hash) ? args.pop : {}
+      options = { :line_width => 80 }.merge(options)
+
+      text.split("\n").collect do |line|
+        line.length > options[:line_width] ? line.gsub(/(.{1,#{options[:line_width]}})(\s+|$)/, "\\1\n").strip : line
+      end * "\n"
+    end
 
     def choose(prompt, choices, confirm=false)
       selection = nil
